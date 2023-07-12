@@ -20,7 +20,17 @@
   <script type="text/babel">
   const container = document.getElementById('app') 
   const root = ReactDOM.createRoot(container) 
-  const element = <p className="red-border">hello react</p>
+
+  const sampleText = 'サンプルテキスト'
+
+  const cssSample = { 
+    fontSize: '20px', 
+    backgroundColor: 'skyblue', 
+    color: 'blue',
+  }
+
+
+  const element = <p style={cssSample} className="red-border">{sampleText}</p>
   root.render(element)
   </script>
 </body>

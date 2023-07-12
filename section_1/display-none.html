@@ -20,7 +20,11 @@
   <script type="text/babel">
   const container = document.getElementById('app') 
   const root = ReactDOM.createRoot(container) 
-  const element = <p className="red-border">hello react</p>
+
+  const isShow = false
+
+  const element = <div style={{ display: isShow ? 'initial' : 'none' }}>表示</div>
+
   root.render(element)
   </script>
 </body>
