@@ -31,10 +31,16 @@
 
       return (<>
         <div>count: { count } </div>
-        <button onClick={handleClick}>+1</button> 
+        <ChildComponent handleClick={handleClick} />
       </>
       )
   }
+
+  const ChildComponent = props => {
+    return (<> 子どもです。
+      <button onClick={props.handleClick}>+1</button>
+    </>
+  )}
 
   root.render(
     <>

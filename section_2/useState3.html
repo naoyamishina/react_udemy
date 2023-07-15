@@ -22,11 +22,14 @@
   const root = ReactDOM.createRoot(container) 
 
   const ComponentTest = () => {
-    const useState = React.useState // CDNの場合React.useStateで呼び出す 
-    const [ count, setCount ] = useState(0) // 定義
+    const useState = React.useState
+    const [ count, setCount ] = useState(0)
     
     const handleClick = () => {
-      setCount(count + 1) // 更新用の関数(ステート変数) 
+      setCount( count => { 
+        console.log(count) // 現在の値 
+        return count + 1
+      })
     }
 
       return (<>
