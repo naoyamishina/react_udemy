@@ -6,15 +6,34 @@ import BookEdit from './pages/books/BookEdit';
 import BookDetail from './pages/books/BookDetail';
 import BookSearch from './pages/books/BookSearch';
 import { Route, Routes } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 function App() {
+
+  const [ books, setBooks ] = useState([]) // 本の情報 配列
+  const STORAGE_KEY = 'books'
+
+  // 初回マウント時に localStorage内データを useStateに持たせる 
+  useEffect(()=>{ if (localStorage.getItem(STORAGE_KEY)) {
+    try { 
+      setBooks(JSON.parse(localStorage.getItem(STORAGE_KEY))) 
+    } catch(e) { 
+      console.log(e)
+    } 
+  }},[])
+
+  // booksが更新されたらlocalStorageにも保存する
+  useEffect(()=>{ 
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(books))}, 
+  [books]) 
+
   return (<>
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<BookIndex />} />
-        <Route path="search" element={<BookSearch />} /> 
+        <Route index element={<BookIndex books = {books}/>} />
+        <Route path="search" element={<BookSearch books = {books} setBooks = {setBooks}/>} /> 
         <Route path="edit" element={<BookEdit />} >
-          <Route path=":id" element={<BookDetail />} /> 
+          <Route path=":id" element={<BookDetail books = {books}/>} /> 
         </Route>
         <Route path="mui-test" element={<MuiTest />} />
       </Route> 

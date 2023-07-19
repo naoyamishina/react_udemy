@@ -45,8 +45,9 @@
       console.log(books)
       console.log(JSON.stringify(books))
       localStorage.setItem(STORAGE_KEY, JSON.stringify(books))}, 
-    [books]) // 追加
-
+    [books]) 
+    
+    // 追加
     const addBook = () => {
       if(!newBook) return 
       setBooks([...books, newBook ]) 

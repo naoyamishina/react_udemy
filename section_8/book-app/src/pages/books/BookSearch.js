@@ -7,7 +7,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 
-const BookSearch = () => {
+const BookSearch = ({books, setBooks}) => {
+  const navigate = useNavigate()
+  
   const keyword = useRef('')
   const [searchResult, setSearchResult] = useState([])
   
@@ -24,7 +26,6 @@ const BookSearch = () => {
     // fetchでJSON取得
     const response = await fetch(baseUrl + queryParams)
       .then( response => response.json())
-    console.log(response.items)
     // 必要な情報を配列にpush
     const newList = [] // 新しい配列作成
 
@@ -41,6 +42,21 @@ const BookSearch = () => {
     }) 
 
     setSearchResult(newList) // ステートを更新
+  }
+
+  const addBook = card => {
+    console.log(card)
+    const newId = books.length !== 0 ? books.slice(-1)[0].id +1 : 1 // booksがあれば最新のid + 1, なければ1 
+    const newBook = { // id, title, description, imageの他に、読んだ日、メモも追加
+      id: newId, 
+      title: card.title, 
+      description: card.description, 
+      image: card.image,
+      readDate: '', 
+      memo: '' 
+    }
+    setBooks([ ...books, newBook])
+    navigate(`/edit/${newId}`) // 更新後にリダイレクト
   }
   
   return (<>
@@ -106,7 +122,7 @@ const BookSearch = () => {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Fab color="primary">
+                    <Fab color="primary" onClick={() => addBook(card)}>
                       <AddIcon />
                     </Fab>
                   </CardActions>
