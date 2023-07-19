@@ -49,7 +49,8 @@
         const img = book.volumeInfo.imageLinks
         const description = book.volumeInfo.description 
 
-        newList.push({ title: title ? title : '',
+        newList.push({ 
+          title: title ? title : '',
           image: img ? img.thumbnail : '',
           description: description ? description.slice(0, 40) : '' 
         })
