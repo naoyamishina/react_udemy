@@ -9,18 +9,23 @@ import { Route, Routes } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 function App() {
-
-  const [ books, setBooks ] = useState([]) // 本の情報 配列
   const STORAGE_KEY = 'books'
 
+  const [books, setBooks ] = useState(()=>{
+    const saved = localStorage.getItem(STORAGE_KEY); 
+    const initialValue = JSON.parse(saved);
+    
+    return initialValue || [] ;
+  }) // 本の情報 配列
+
   // 初回マウント時に localStorage内データを useStateに持たせる 
-  useEffect(()=>{ if (localStorage.getItem(STORAGE_KEY)) {
-    try { 
-      setBooks(JSON.parse(localStorage.getItem(STORAGE_KEY))) 
-    } catch(e) { 
-      console.log(e)
-    } 
-  }},[])
+  // useEffect(()=>{ if (localStorage.getItem(STORAGE_KEY)) {
+  //   try { 
+  //     setBooks(JSON.parse(localStorage.getItem(STORAGE_KEY))) 
+  //   } catch(e) { 
+  //     console.log(e)
+  //   } 
+  // }},[])
 
   // booksが更新されたらlocalStorageにも保存する
   useEffect(()=>{ 
