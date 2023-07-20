@@ -9,15 +9,36 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ja from 'date-fns/locale/ja'
 import { useState } from 'react';
+import { format } from 'date-fns';
 
-const BookDetail = ({books}) => {
-  const [value, setValue ] = useState()
+const BookDetail = ({books, setBooks}) => {
   const params = useParams()
   const navigate = useNavigate()
 
   const book = books.find( book => {
     return book.id === parseInt(params.id, 10)
   })
+
+  const [value, setValue ] = useState(book.readDate)
+  const [memo, setMemo] = useState(book.memo)
+
+  const setNewValue = newValue => { 
+    setValue(format(newValue, 'yyyy/MM/dd'))
+  }
+
+  const updateBookInfo = bookId => {
+    const newList = books.filter(book => { //新しい配列を作成
+      if(book.id === bookId ){ // 同じidのものだけ内容を変更 
+        book.readDate = value
+        book.memo = memo
+        return book
+      } else { 
+        return book
+      } 
+    })
+    setBooks(newList)
+    navigate('/') 
+  }
 
   return (<>
     <Container component="section" maxWidth="md"
@@ -37,15 +58,18 @@ const BookDetail = ({books}) => {
               </Typography>
               <Box sx={{mb:2 }}>
                 読んだ日: 
-                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ja} //日本語対応
+                <LocalizationProvider 
+                  dateAdapter={AdapterDateFns} 
+                  adapterLocale={ja} //日本語対応
                   dateFormats={{ monthAndYear: "yyyy年 MM月" }} // カレンダー上部の表示変更 
                 >
                   <DatePicker 
                     label="日付" 
                     value={value} 
                     maxDate={new Date()} // 当日以降を選べないように 
-                    onChange={(newValue) => {setValue(newValue);}}
-                    renderInput={(params) => <TextField {...params} />} 
+                    onChange={(newValue) => {setNewValue(newValue);}}
+                    renderInput={(params) => <TextField {...params} 
+                  />} 
                   />
                 </LocalizationProvider>
               </Box>
@@ -54,7 +78,10 @@ const BookDetail = ({books}) => {
                 <TextField
                 multiline
                 fullWidth
-                rows={8}/>
+                rows={8}
+                value={memo}
+                onChange={e => setMemo(e.target.value)}
+                />
               </Box>
             </CardContent>
             <CardActions>
@@ -64,7 +91,9 @@ const BookDetail = ({books}) => {
                   color="secondary" variant="contained">一覧に戻る</Button>
                 </Grid>
                 <Grid item sm={6}>
-                  <Button color="info" variant="contained">保存する</Button>
+                  <Button color="info" variant="contained" onClick={()=>updateBookInfo(book.id)}>
+                    保存する
+                  </Button>
                 </Grid>
               </Grid>
             </CardActions>
